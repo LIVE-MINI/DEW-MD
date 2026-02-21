@@ -6,7 +6,7 @@ function convertToBool(text, fault = 'true') {
 }
 module.exports = {
 // Add Your Session Id Start With DEW-MD Hear
-SESSION_ID: process.env.SESSION_ID || "",
+SESSION_ID: process.env.SESSION_ID || "DEW-MD~O443hKhA#vRS-xVOYHgWgEJe8NXtAoV7BqPllJSNAbCjHxVc8b_8",
 // Dew MD Api Site Url
 API_BASE: process.env.API_BASE || "https://api.srihub.store",
 // Dew MD Api Key -- Add This To Your Api Key Form Api Site
@@ -89,4 +89,5 @@ AUTO_RECORDING: process.env.AUTO_RECORDING || "true",
 AUTO_BLOCK: process.env.AUTO_BLOCK || "false"
 // make it true for auto block
 };
+
 
