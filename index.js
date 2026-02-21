@@ -621,7 +621,7 @@ async function connectToWA() {
           console.log('Anti-Delete Error:', error);
         }
       }
-    });
+    }
 
 
 app.get('/', (req, res) => {
