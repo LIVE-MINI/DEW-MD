@@ -622,7 +622,7 @@ async function connectToWA() {
         }
       }
     });
-}
+
 
 app.get('/', (req, res) => {
   res.send('⏤ ͟͞ ❮❮ 𝔻𝔼𝕎-ℂ𝕆𝔻𝔼ℝ𝕊 ❯❯ ⏤ᴅᴇᴡ-ᴍᴅᵀᴹ ヤ');
