@@ -66,18 +66,32 @@ if (!fs.existsSync(CREDS)) {
     process.exit(1);
   }
 
-  let session = config.SESSION_ID.trim();
-  if (!session.startsWith('DEW-MD~')) {
-    console.log('❌ Invalid DEW-MD session format');
+  try {
+    let session = config.SESSION_ID.trim();
+    if (!session.startsWith('DEW-MD~')) {
+      console.log('❌ Invalid DEW-MD session format. It must start with DEW-MD~');
+      process.exit(1);
+    }
+
+    // Base64 decode කිරීම
+    const decoded = Buffer.from(session.substring(7), 'base64').toString('utf8');
+    
+    // JSON එක නිවැරදිදැයි පරීක්ෂා කිරීම (Crash වීම වළක්වයි)
+    try {
+      JSON.parse(decoded);
+      fs.mkdirSync(AUTH_DIR, { recursive: true });
+      fs.writeFileSync(CREDS, decoded, { encoding: 'utf8' });
+      console.log('♻️ DEW-MD session restored successfully');
+    } catch (jsonError) {
+      console.log('❌ The decoded session is not a valid JSON. Your SESSION_ID is corrupted!');
+      process.exit(1);
+    }
+  } catch (err) {
+    console.log('❌ Critical Error during session restoration:', err.message);
     process.exit(1);
   }
-
-  const decoded = Buffer.from(session.substring(7), 'base64').toString('utf8');
-  JSON.parse(decoded);
-  fs.mkdirSync(AUTH_DIR, { recursive: true });
-  fs.writeFileSync(CREDS, decoded, { encoding: 'utf8' });
-  console.log('♻️ DEW-MD session restored successfully');
 }
+
 
 const express = require('express');
 const app = express();
