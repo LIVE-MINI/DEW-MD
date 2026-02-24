@@ -60,42 +60,30 @@ const messageStore = new Map();
 const AUTH_DIR = path.join(__dirname, 'auth_info_baileys');
 const CREDS = path.join(AUTH_DIR, 'creds.json');
 
-if (!fs.existsSync(CREDS)) {
-  if (!config.SESSION_ID) {
-    console.log('❌ SESSION_ID missing');
-    process.exit(1);
-  }
-
+// --- SESSION RESTORATION LOGIC ---
+if (!fs.existsSync(CREDS) && config.SESSION_ID) {
   try {
     let session = config.SESSION_ID.trim();
-    if (!session.startsWith('DEW-MD~')) {
-      console.log('❌ Invalid DEW-MD session format. It must start with DEW-MD~');
-      process.exit(1);
-    }
-
-    // Base64 decode කිරීම
-    const decoded = Buffer.from(session.substring(7), 'base64').toString('utf8');
-    
-    // JSON එක නිවැරදිදැයි පරීක්ෂා කිරීම (Crash වීම වළක්වයි)
-    try {
-      JSON.parse(decoded);
+    if (session.startsWith('DEW-MD~')) {
+      const decoded = Buffer.from(session.substring(7), 'base64').toString('utf8');
+      JSON.parse(decoded); // JSON නිවැරදිදැයි බලයි
       fs.mkdirSync(AUTH_DIR, { recursive: true });
       fs.writeFileSync(CREDS, decoded, { encoding: 'utf8' });
       console.log('♻️ DEW-MD session restored successfully');
-    } catch (jsonError) {
-      console.log('❌ The decoded session is not a valid JSON. Your SESSION_ID is corrupted!');
-      process.exit(1);
+    } else {
+      console.log('❌ Invalid SESSION_ID format. Skipping restoration...');
     }
   } catch (err) {
-    console.log('❌ Critical Error during session restoration:', err.message);
-    process.exit(1);
+    console.log('⚠️ Session restoration failed. Starting fresh...');
   }
+} else if (!config.SESSION_ID && !fs.existsSync(CREDS)) {
+  console.log('ℹ️ No SESSION_ID found. You will need to link via Pairing Code.');
 }
-
 
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 9090;
+
 
 async function connectToWA() {
   await downloadAndExtractZip();
