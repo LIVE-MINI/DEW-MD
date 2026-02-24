@@ -620,7 +620,10 @@ async function connectToWA() {
         } catch (error) {
           console.log('Anti-Delete Error:', error);
         }
-      }
+      } // Anti-Delete එකේ පලවෙනි block එක වසයි
+    } // දෙවන block එක (උදා: message-upsert) වසයි
+  }); // අවසාන event listener එක වසයි
+} // මුළු function එකම වසයි
 
 app.get('/', (req, res) => {
   res.send('⏤ ͟͞ ❮❮ 𝔻𝔼𝕎-ℂ𝕆𝔻𝔼ℝ𝕊 ❯❯ ⏤ᴅᴇᴡ-ᴍᴅᵀᴹ ヤ');
